@@ -6,9 +6,11 @@ services:
     ports:
       - "8000:8000"
     
-  llm-verktøy-api:
-    build: ./llm-verktøy-api
+  llm-verktoy-api:
+    build: ./llm-verktoy-api
     ports:
       - "8001:8001"
     depends_on:
       - konsulent-api
+    env_file:
+      - llm-verktoy-api/.env
