@@ -92,7 +92,8 @@ def generate_simple_summary(consultants: list, criteria: dict = None) -> str:
             details.append(f"ferdigheten '{criteria['required_skill']}'")
         
         criteria_text = " og ".join(details)
-        return f"Fant {len(consultants)} konsulent{'er' if len(consultants) > 1 else ''} med {criteria_text}."
+        consultant_names = ", ".join([c["navn"] for c in consultants])
+        return f"Fant {len(consultants)} konsulent{'er' if len(consultants) > 1 else ''} med {criteria_text}. Navn: {consultant_names}."
     
     return f"Fant {len(consultants)} konsulenter."
 
