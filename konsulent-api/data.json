@@ -1,0 +1,52 @@
+{
+  "konsulenter": [
+    {
+      "id": 1,
+      "navn": "Anna K.",
+      "ferdigheter": ["python", "machine learning", "fastapi", "docker"],
+      "belastning_prosent": 40
+    },
+    {
+      "id": 2,
+      "navn": "Leo T.",
+      "ferdigheter": ["javascript", "react", "node.js", "python"],
+      "belastning_prosent": 20
+    },
+    {
+      "id": 3,
+      "navn": "Maria S.",
+      "ferdigheter": ["java", "spring", "microservices", "kubernetes"],
+      "belastning_prosent": 85
+    },
+    {
+      "id": 4,
+      "navn": "Erik H.",
+      "ferdigheter": ["python", "django", "postgresql", "aws"],
+      "belastning_prosent": 60
+    },
+    {
+      "id": 5,
+      "navn": "Sofia L.",
+      "ferdigheter": ["c#", "dotnet", "azure", "devops"],
+      "belastning_prosent": 30
+    },
+    {
+      "id": 6,
+      "navn": "Marcus B.",
+      "ferdigheter": ["go", "microservices", "docker", "kubernetes"],
+      "belastning_prosent": 90
+    },
+    {
+      "id": 7,
+      "navn": "Ida N.",
+      "ferdigheter": ["python", "data science", "machine learning", "pandas"],
+      "belastning_prosent": 25
+    },
+    {
+      "id": 8,
+      "navn": "Oliver P.",
+      "ferdigheter": ["typescript", "angular", "node.js", "mongodb"],
+      "belastning_prosent": 70
+    }
+  ]
+}
