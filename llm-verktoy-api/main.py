@@ -45,7 +45,7 @@ async def generate_llm_summary(consultants: list, criteria: dict) -> str:
     INSTRUKSJONER:
     1. Start med antall konsulenter funnet
     2. Nevn søkekriteriene hvis de er spesifisert
-    3. List hver konsulent med navn og tilgjengelighet
+    3. VIKTIG: Inkluder alle navn på konsulenter som matcher kriteriene samt deres tilgjengelighet
     4. Skriv på norsk
     5. Hold det kort og profesjonelt
     6. Maksimalt 2-3 setninger
