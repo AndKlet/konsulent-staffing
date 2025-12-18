@@ -4,18 +4,13 @@ import json
 import os
 from typing import Optional
 
+
 app = FastAPI(title="LLM Verktøy API", version="1.0.0")
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 SELECTED_MODEL = "openai/gpt-3.5-turbo"
-
 KONSULENT_API_URL = "http://konsulent-api:8000"
-
-
-@app.get("/")
-async def root():
-    return {"message": "LLM Verktøy API is running."}
 
 async def generate_llm_summary(consultants: list, criteria: dict) -> str:
     """
@@ -76,7 +71,7 @@ async def generate_llm_summary(consultants: list, criteria: dict) -> str:
             return result["choices"][0]["message"]["content"].strip()
     except Exception as e:
         print(f"OpenRouter error: {e}")
-        return generate_simple_summary(consultants, criteria)  # Pass criteria!
+        return generate_simple_summary(consultants, criteria)
     
 
 def generate_simple_summary(consultants: list, criteria: dict = None) -> str:
