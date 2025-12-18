@@ -12,6 +12,7 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 SELECTED_MODEL = "openai/gpt-3.5-turbo"
 KONSULENT_API_URL = "http://konsulent-api:8000"
 
+
 async def generate_llm_summary(consultants: list, criteria: dict) -> str:
     """
     Generate summary using LLM
@@ -22,11 +23,13 @@ async def generate_llm_summary(consultants: list, criteria: dict) -> str:
     consultant_data = []
     for c in consultants:
         availability = 100 - c["belastning_prosent"]
-        consultant_data.append({
-            "navn": c["navn"],
-            "ferdigheter": c["ferdigheter"],
-            "tilgjengelighet": f"{availability}%"
-        })
+        consultant_data.append(
+            {
+                "navn": c["navn"],
+                "ferdigheter": c["ferdigheter"],
+                "tilgjengelighet": f"{availability}%",
+            }
+        )
 
     prompt = f"""Du er en AI-assistent for konsulent-staffing.
 
@@ -47,7 +50,7 @@ async def generate_llm_summary(consultants: list, criteria: dict) -> str:
     5. Hold det kort og profesjonelt
     6. Maksimalt 2-3 setninger
     """
-    
+
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
@@ -58,12 +61,10 @@ async def generate_llm_summary(consultants: list, criteria: dict) -> str:
                 },
                 json={
                     "model": SELECTED_MODEL,
-                    "messages": [
-                        {"role": "user", "content": prompt}
-                    ],
+                    "messages": [{"role": "user", "content": prompt}],
                     "max_tokens": 200,
-                    "temperature": 0.3
-                }
+                    "temperature": 0.3,
+                },
             )
             response.raise_for_status()
             result = response.json()
@@ -72,31 +73,33 @@ async def generate_llm_summary(consultants: list, criteria: dict) -> str:
     except Exception as e:
         print(f"OpenRouter error: {e}")
         return generate_simple_summary(consultants, criteria)
-    
+
 
 def generate_simple_summary(consultants: list, criteria: dict = None) -> str:
     """Generate a simple summary without LLM as a fallback."""
     if not consultants:
         return "Fant ingen konsulenter som matcher kriteriene."
-    
-    if criteria and (criteria.get('min_availability') or criteria.get('required_skill')):
+
+    if criteria and (
+        criteria.get("min_availability") or criteria.get("required_skill")
+    ):
         details = []
-        if criteria.get('min_availability'):
+        if criteria.get("min_availability"):
             details.append(f"minst {criteria['min_availability']}% tilgjengelighet")
-        if criteria.get('required_skill'):
+        if criteria.get("required_skill"):
             details.append(f"ferdigheten '{criteria['required_skill']}'")
-        
+
         criteria_text = " og ".join(details)
         consultant_names = ", ".join([c["navn"] for c in consultants])
         return f"Fant {len(consultants)} konsulent{'er' if len(consultants) > 1 else ''} med {criteria_text}. Navn: {consultant_names}."
-    
+
     return f"Fant {len(consultants)} konsulenter."
 
 
 @app.get("/tilgjengelige-konsulenter/sammendrag")
 async def get_available_consultants_summary(
     min_tilgjengelighet_prosent: Optional[int] = None,
-    påkrevd_ferdighet: Optional[str] = None
+    påkrevd_ferdighet: Optional[str] = None,
 ):
     """Endpoint to get a summary of available consultants based on criteria"""
     try:
@@ -106,29 +109,43 @@ async def get_available_consultants_summary(
             consultants = response.json()
 
     except httpx.RequestError as e:
-        raise HTTPException(status_code=503, detail=f"Konsulent API ikke tilgjengelig: {str(e)}")
-    
+        raise HTTPException(
+            status_code=503, detail=f"Konsulent API ikke tilgjengelig: {str(e)}"
+        )
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Feil ved henting av data: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Feil ved henting av data: {str(e)}"
+        )
 
     filtered = consultants
 
     if min_tilgjengelighet_prosent is not None and min_tilgjengelighet_prosent > 0:
-        filtered = [k for k in filtered if (100 - k["belastning_prosent"]) >= min_tilgjengelighet_prosent]
-    
+        filtered = [
+            k
+            for k in filtered
+            if (100 - k["belastning_prosent"]) >= min_tilgjengelighet_prosent
+        ]
+
     if påkrevd_ferdighet is not None and påkrevd_ferdighet != "":
         påkrevd_lower = påkrevd_ferdighet.lower()
-        filtered = [k for k in filtered if any(påkrevd_lower == skill.lower() for skill in k["ferdigheter"])]
+        filtered = [
+            k
+            for k in filtered
+            if any(påkrevd_lower == skill.lower() for skill in k["ferdigheter"])
+        ]
 
     criteria = {
         "min_availability": min_tilgjengelighet_prosent,
-        "required_skill": påkrevd_ferdighet
+        "required_skill": påkrevd_ferdighet,
     }
 
     summary = await generate_llm_summary(filtered, criteria)
 
     return {"sammendrag": summary}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8001)
