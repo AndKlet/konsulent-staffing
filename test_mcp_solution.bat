@@ -2,19 +2,12 @@
 echo Quick MCP Test Suite (Windows Batch)
 echo ========================================
 
-echo.
-echo [1] Health Checks...
-curl -s http://localhost:8000/ 
-echo.
-curl -s http://localhost:8001/
-echo.
-
-echo [2] Basic Data...
+echo [1] Basic Data...
 echo Total consultants:
 curl -s http://localhost:8000/konsulenter
 echo.
 
-echo [3] Core Functionality...
+echo [2] Core Functionality...
 echo.
 echo All consultants:
 curl -s "http://localhost:8001/tilgjengelige-konsulenter/sammendrag"
