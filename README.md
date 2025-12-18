@@ -18,7 +18,7 @@ En Model Context Protocol (MCP) løsning for konsulent-staffing med to mikrotjen
    ```
    git clone git@github.com:AndKlet/konsulent-staffing.git
    ```
-2. Opprett en `.env` fil i rotmappa:
+2. Opprett en `.env` fil i `llm-verktoy-api`:
    ```
    OPENROUTER_API_KEY=din_openrouter_api_nokkel_her
    ```
